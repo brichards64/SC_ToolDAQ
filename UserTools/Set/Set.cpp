@@ -16,27 +16,20 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 
   if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
-	if(m_data->LAPPDdata.HV_state_set==NULL)
+	if(m_data->LAPPDdata.recieveFlag==0)
 	{
 		bool temp_HVS;
 		m_variables.Get("HV_state_set",temp_HVS);
 		m_data->LAPPDdata.HV_state_set = temp_HVS;
-		flag = true;
-	}
-	if(m_data->LAPPDdata.LV_state_set==NULL)
-	{
+
 		bool temp_LVS;
 		m_variables.Get("LV_state_set",temp_LVS);
 		m_data->LAPPDdata.LV_state_set = temp_LVS;
-		flag = true;
-	}
-	if(m_data->LAPPDdata.HV_volts==NULL)
-	{
-		bool temp_HVV;
+
+		float temp_HVV;
 		m_variables.Get("HV_volts",temp_HVV);
 		m_data->LAPPDdata.HV_volts = temp_HVV;
 		m_data->CB->get_HV_volts= temp_HVV;
-		flag = true;
 	}
 
   int retval;
@@ -81,33 +74,23 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 bool Set::Execute(){
 
 	//check LV/HV state_set 
-  if(flag==true)
+  if(m_data->LAPPDdata.recieveFlag==0)
   {
-  	  if(m_data->LAPPDdata.HV_state_set==NULL)
-	  {
-	  	bool temp_HVS;
-	  	m_variables.Get("HV_state_set",temp_HVS);
-	  	m_data->LAPPDdata.HV_state_set = temp_HVS;
-	  	flag = true;
-	  }
-	  if(m_data->LAPPDdata.LV_state_set==NULL)
-	  {
-	  	bool temp_LVS;
-	  	m_variables.Get("LV_state_set",temp_LVS);
-	  	m_data->LAPPDdata.LV_state_set = temp_LVS;
-	  	flag = true;
-	  }
-	  if(m_data->LAPPDdata.HV_volts==NULL)
-	  {
-	  	bool temp_HVV;
-	  	m_variables.Get("HV_volts",temp_HVV);
-	  	m_data->LAPPDdata.HV_volts = temp_HVV;
-	  	m_data->CB->get_HV_volts= temp_HVV;
-	  	flag = true;
-	  }
 
-	  m_data->CB= new Canbus();
-	  m_data->CB->Connect(); 
+		bool temp_HVS;
+		m_variables.Get("HV_state_set",temp_HVS);
+		m_data->LAPPDdata.HV_state_set = temp_HVS;
+
+		bool temp_LVS;
+		m_variables.Get("LV_state_set",temp_LVS);
+		m_data->LAPPDdata.LV_state_set = temp_LVS;
+
+		float temp_HVV;
+		m_variables.Get("HV_volts",temp_HVV);
+		m_data->LAPPDdata.HV_volts = temp_HVV;
+		m_data->CB->get_HV_volts= temp_HVV;
+	
+
 
 	  int retval;
 	  retval = m_data->CB->SetLV(m_data->LAPPDdata.LV_state_set);

@@ -31,18 +31,13 @@ bool Recieve::Initialise(std::string configfile, DataModel &data){
     m_data->LAPPDdata.Receive(sock);
   }
 
-  if(m_data->LAPPDdata.HV_state_set==NULL || m_data->LAPPDdata.LV_state_set==NULL || m_data->LAPPDdata.HV_volts==NULL)
-  {
-    flag = true;
-  }
-
   return true;
 }
 
 
 bool Recieve::Execute(){
 
-  if(flag == true) 
+  if(m_data->LAPPDdata.recieveFlag == 0) 
   {
     zmq::poll(&items[0], 1, 100);
 

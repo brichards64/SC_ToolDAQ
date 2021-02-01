@@ -50,6 +50,7 @@ public:
 	int SetHV_ONOFF(bool state); //done
 	int SetHV_voltage(float volts); //done
 	int GetHV_ONOFF(); //done
+	float get_HV_volts = 0;
 
 	//RHT
 	vector<float> GetTemp(); //done
@@ -91,9 +92,9 @@ public:
 
 	char* parseFrame(unsigned int id, unsigned long msg)
 	{
-		char* t_id = (char *)malloc(3);
-		char* t_msg = (char *)malloc(8);
-		char* r_frame = (char*)malloc(11);
+		char* t_id = (char *)malloc(64);
+		char* t_msg = (char *)malloc(64);
+		char* r_frame = (char*)malloc(128);
 
 		stringstream ss;
 		ss << std::setfill('0') << std::setw(3) << std::hex << id;
@@ -104,15 +105,16 @@ public:
 		strcpy(r_frame,ss.str().c_str());
 		strcat(r_frame,DELIM);
 		strcat(r_frame,ss2.str().c_str());
-		
+
 		std::cout << r_frame << std::endl;
+
 		return r_frame;
 	}
 
 
 	int createCanFrame(unsigned int id, unsigned long msg, struct can_frame *cf)
 	{
-		char *t_frame = (char *)malloc(11);
+		char *t_frame = (char *)malloc(128);
 		t_frame = parseFrame(id,msg);
 
 		int i, idx, dlc, len;
@@ -143,7 +145,7 @@ public:
 			{
 		  		if((temp = asc2nib(t_frame[i])) > 0x0F)
 		  		{
-				    return 2;
+				    return 1;
 				}
 		  		cf->can_id |= (temp << (7-i)*4);
 			}
@@ -153,7 +155,7 @@ public:
 			}
 		} else 
 		{
-			return 3;
+			return 1;
 		}
 
 		for (i=0, dlc=0; i<16; i++)
@@ -168,12 +170,12 @@ public:
 			}
 			if((temp = asc2nib(t_frame[idx++])) > 0x0F)
 			{
-		  		return 4;
+		  		return 1;
 			}
 			cf->data[i] = (temp << 4);
 			if((temp = asc2nib(t_frame[idx++])) > 0x0F)
 			{
-		  		return 5;
+		  		return 1;
 			}
 			cf->data[i] |= temp;
 			dlc++;

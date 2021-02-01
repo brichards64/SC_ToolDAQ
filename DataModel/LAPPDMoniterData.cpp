@@ -26,6 +26,10 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
 
   zmq::message_t msg;
   
+  //flag
+  sock->recv(&msg);
+  recieveFlag=*(reinterpret_cast<int*>(msg.data())); 
+
   //HV
   sock->recv(&msg);   
   HV_state_set=*(reinterpret_cast<bool*>(msg.data()));
