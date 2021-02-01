@@ -33,6 +33,7 @@ class Recieve: public Tool {
   zmq::pollitem_t items[1];
   int m_port;
 
+  bool flag;
 
 
 

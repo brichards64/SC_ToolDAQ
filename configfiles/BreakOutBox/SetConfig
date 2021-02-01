@@ -1,4 +1,4 @@
 verbose 1
 LV_state_set 1
-HV_state_set 1
-HV_volts 50
+HV_state_set 0
+HV_volts 50.

@@ -38,6 +38,8 @@ bool Stream::Execute(){
     m_data->LAPPDdata.Send(sock);
     last=boost::posix_time::second_clock::local_time();
   }
+
+  m_data->LAPPDdata.Print();
   
   return true;
 }

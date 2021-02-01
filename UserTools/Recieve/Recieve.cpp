@@ -24,18 +24,32 @@ bool Recieve::Initialise(std::string configfile, DataModel &data){
   items[0].events = ZMQ_POLLIN;
   items[0].revents =0;
 
+  zmq::poll(&items[0], 1, 100);
+
+  if((items [0].revents & ZMQ_POLLIN)) 
+  {
+    m_data->LAPPDdata.Receive(sock);
+  }
+
+  if(m_data->LAPPDdata.HV_state_set==NULL || m_data->LAPPDdata.LV_state_set==NULL || m_data->LAPPDdata.HV_volts==NULL)
+  {
+    flag = true;
+  }
+
   return true;
 }
 
 
 bool Recieve::Execute(){
 
-  zmq::poll(&items[0], 1, 100);
-
-  if((items [0].revents & ZMQ_POLLIN)) 
+  if(flag == true) 
   {
-  	m_data->LAPPDdata.Receive(sock);
-  	m_data->LAPPDdata.Print();
+    zmq::poll(&items[0], 1, 100);
+
+    if((items [0].revents & ZMQ_POLLIN)) 
+    {
+    	m_data->LAPPDdata.Receive(sock);
+    }
   }
 
   return true;

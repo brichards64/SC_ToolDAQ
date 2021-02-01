@@ -29,7 +29,7 @@ class Set: public Tool {
 
  private:
 
-
+ bool flag;
 
 
 

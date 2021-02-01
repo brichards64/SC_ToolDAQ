@@ -31,7 +31,6 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
   HV_state_set=*(reinterpret_cast<bool*>(msg.data()));
   sock->recv(&msg);   
   HV_volts=*(reinterpret_cast<float*>(msg.data())); 
-  
   //LV
   sock->recv(&msg);  
   LV_state_set=*(reinterpret_cast<bool*>(msg.data()));
@@ -53,9 +52,10 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
 
 bool LAPPDMoniterData::Print(){
 
-  std::cout<<"hum="<<hum_mon<<std::endl;
-  std::cout<<"temp="<<temp_mon<<std::endl;
-  std::cout<<"HV="<<HV_mon<<std::endl;
-  std::cout<<"LV="<<LV_mon<<std::endl;
-
+  std::cout<<"humidity = "<<hum_mon<<std::endl;
+  std::cout<<"temperature = "<<temp_mon<<std::endl;
+  std::cout<<"HV state should be " << HV_state_set << " and is "<<HV_mon<<std::endl;
+  std::cout<<"LV state should be " << LV_state_set << " and is "<<LV_mon<<std::endl;
+  std::cout<<"Temperature warning flag is " <<FLAG_temperature<<std::endl;
+  std::cout<<"Humidity warning flag is " <<FLAG_humidity<<std::endl;
 }

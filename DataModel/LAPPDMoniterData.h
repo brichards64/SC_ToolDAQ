@@ -23,20 +23,20 @@ class LAPPDMoniterData : public SerialisableObject{
   
   //HV
   bool HV_mon;
-  bool HV_state_set;
-  float HV_volts;
+  bool HV_state_set = NULL;
+  float HV_volts = NULL;
 
   //LV
   bool LV_mon;
-  bool LV_state_set;
+  bool LV_state_set = NULL;
 
   //Emergency variables
-  float LIMIT_temperature_low;
-  float LIMIT_humidity_low;
-  float LIMIT_temperature_high;
-  float LIMIT_humidity_high;  
-  int FLAG_temperature;
-  int FLAG_humidity;
+  float LIMIT_temperature_low = NULL;
+  float LIMIT_humidity_low = NULL;
+  float LIMIT_temperature_high = NULL;
+  float LIMIT_humidity_high = NULL;  
+  bool FLAG_temperature;
+  bool FLAG_humidity;
 
 
 

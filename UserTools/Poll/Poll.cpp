@@ -13,8 +13,8 @@ bool Poll::Initialise(std::string configfile, DataModel &data){
 
   if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
-  m_data->CB= new Canbus();
-  m_data->CB->Connect(); 
+ // m_data->CB= new Canbus();
+ // m_data->CB->Connect(); 
 
   return true;
 }
@@ -32,7 +32,7 @@ bool Poll::Execute(){
   	m_data->LAPPDdata.LV_mon == true;
   }else
   {
-  	cout << "There has been an error!" << endl;
+  	std::cout << "There has been an error with: " << LVstate << std::endl;
   }
 
   //HV
@@ -45,7 +45,7 @@ bool Poll::Execute(){
   	m_data->LAPPDdata.HV_mon == true;
   }else
   {
-  	cout << "There has been an error!" << endl;
+  	std::cout << "There has been an error: " << HVstate << std::endl;
   }
 
   //RHT
