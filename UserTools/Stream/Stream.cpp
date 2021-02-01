@@ -33,7 +33,7 @@ bool Stream::Execute(){
   boost::posix_time::ptime current(boost::posix_time::second_clock::local_time());
   boost::posix_time::time_duration lapse(period - (current - last)); 
 
-  if (!lapse.is_negative())
+  if(!lapse.is_negative())
   {
     m_data->LAPPDdata.Send(sock);
     last=boost::posix_time::second_clock::local_time();

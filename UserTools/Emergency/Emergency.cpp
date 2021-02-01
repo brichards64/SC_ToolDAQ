@@ -1,9 +1,9 @@
-#include "Set.h"
+#include "Emergency.h"
 
-Set::Set():Tool(){}
+Emergency::Emergency():Tool(){}
 
 
-bool Set::Initialise(std::string configfile, DataModel &data){
+bool Emergency::Initialise(std::string configfile, DataModel &data){
 
   if(configfile!="")  m_variables.Initialise(configfile);
   //m_variables.Print();
@@ -13,20 +13,18 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 
   if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
-  return true;
-}
-
-
-bool Set::Execute(){
-
-	//check LV/HV state_set 
-
 
   return true;
 }
 
 
-bool Set::Finalise(){
+bool Emergency::Execute(){
+
+  return true;
+}
+
+
+bool Emergency::Finalise(){
 
   return true;
 }

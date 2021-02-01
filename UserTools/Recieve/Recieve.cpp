@@ -32,7 +32,7 @@ bool Recieve::Execute(){
 
   zmq::poll(&items[0], 1, 100);
 
-  if ((items [0].revents & ZMQ_POLLIN)) 
+  if((items [0].revents & ZMQ_POLLIN)) 
   {
   	m_data->LAPPDdata.Receive(sock);
   	m_data->LAPPDdata.Print();
