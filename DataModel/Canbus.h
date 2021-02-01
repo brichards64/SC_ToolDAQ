@@ -12,6 +12,7 @@
 #include <chrono>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -49,7 +50,6 @@ public:
 	int SetHV_ONOFF(bool state); //done
 	int SetHV_voltage(float volts); //done
 	int GetHV_ONOFF(); //done
-	float get_HV_volts = 0;
 
 	//RHT
 	vector<float> GetTemp(); //done
@@ -96,15 +96,16 @@ public:
 		char* r_frame = (char*)malloc(11);
 
 		stringstream ss;
-		ss << hex << id;
+		ss << std::setfill('0') << std::setw(3) << std::hex << id;
 
 		stringstream ss2;
-		ss2 << hex << msg;
+		ss2 << std::setfill('0') << std::setw(16) << std::hex << msg;
 
 		strcpy(r_frame,ss.str().c_str());
 		strcat(r_frame,DELIM);
 		strcat(r_frame,ss2.str().c_str());
-
+		
+		std::cout << r_frame << std::endl;
 		return r_frame;
 	}
 
@@ -142,7 +143,7 @@ public:
 			{
 		  		if((temp = asc2nib(t_frame[i])) > 0x0F)
 		  		{
-				    return 1;
+				    return 2;
 				}
 		  		cf->can_id |= (temp << (7-i)*4);
 			}
@@ -152,10 +153,10 @@ public:
 			}
 		} else 
 		{
-			return 1;
+			return 3;
 		}
 
-		for (i=0, dlc=0; i<8; i++)
+		for (i=0, dlc=0; i<16; i++)
 		{
 			if(t_frame[idx] == DATA_SEPERATOR)
 			{
@@ -167,12 +168,12 @@ public:
 			}
 			if((temp = asc2nib(t_frame[idx++])) > 0x0F)
 			{
-		  		return 1;
+		  		return 4;
 			}
 			cf->data[i] = (temp << 4);
 			if((temp = asc2nib(t_frame[idx++])) > 0x0F)
 			{
-		  		return 1;
+		  		return 5;
 			}
 			cf->data[i] |= temp;
 			dlc++;

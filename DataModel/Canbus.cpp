@@ -39,7 +39,7 @@ int Canbus::GetTriggerDac0()
 	unsigned long long msg = 0x0000000000000000;
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "DAC0: Wrong format!\n\n");
 		return 2;
 	}
@@ -88,7 +88,7 @@ int Canbus::GetTriggerDac1()
 	unsigned long long msg = 0x0000000000000000;
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "DAC1: Wrong format!\n\n");
 		return 2;
 	}
@@ -140,7 +140,7 @@ int Canbus::SetTriggerDac0()
 	msg = msg;
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "DAC0: Wrong format!\n\n");
 		return 2;
 	}
@@ -195,7 +195,7 @@ int Canbus::SetTriggerDac1()
 	msg = msg;
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "DAC1: Wrong format!\n\n");
 		return 2;
 	}
@@ -248,7 +248,7 @@ vector<float> Canbus::GetTemp()
 	unsigned long long msg = 0x0000000000000000;
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "RHT: Wrong format!\n\n");
 		return {2};
 	}
@@ -330,7 +330,7 @@ int Canbus::SetHV_ONOFF(bool state){
 	}
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "HV: Wrong format!\n\n");
 		return 2;
 	}
@@ -399,71 +399,45 @@ int Canbus::SetHV_ONOFF(bool state){
 //2: error on create message
 //3: error on write
 int Canbus::SetHV_voltage(float volts){ 
-
+	unsigned int id = 0x050;
+	unsigned long long msg = 0x0000000000000000;
 	int retval;
-	float sign = -1.0;
-	float v_pre, v_tmp, v_diff, vset;
+	float vset;
 
 	if(volts > HV_MAX)
-	{
-		volts = HV_MAX;
-		std::cout << "Max voltage set" << std::endl;
+  	{
+    	vset = HV_MAX;
+  	}else
+  	{
+  		vset = volts;
+  	}
+
+	float vpct = vset / C40N_MAX;
+	printf("  fraction of max HV output (4kV) = %f\n", vpct);
+	float dac_vout = vpct * DAC_VMAX;
+	printf("  DAC output voltage = %f\n", dac_vout);
+
+	// convert into DAC input code
+	int k = 0;
+	k = (int)(pow(2,12) * dac_vout / DAC_VREF);
+	//printf("DEBUG:  k = %d,  k = %X (hex),  k << 3 = %X (hex)\n", k, k, (k<<3));
+
+  	unsigned long long tmp;
+  	stringstream ss;
+  	ss << std::hex << (k<<3);
+  	tmp = std::stoull(ss.str(),nullptr,16);
+
+	msg = msg | (tmp<<48);
+	printf("0x%016llx\n", msg);
+
+	//Ask for sensor data
+	if(createCanFrame(id,msg,&frame)){
+		fprintf(stderr, "HV: Wrong format!\n\n");
+		return 2;
 	}
-
-	//take volts from input and 
-	v_pre = get_HV_volts;
-    if (volts > v_pre)
-    {
-      sign = 1.0;
-    }	
-    v_tmp = v_pre;
-    v_diff = abs(volts-v_tmp);
-	while(v_tmp != volts)
-	{
-		if(v_diff < 50) // check if close to final voltage
-		{
-			v_tmp += sign*v_diff;
-		}
-		else // increment by DV volts
-		{
-			v_tmp += sign*50;
-		}
-		v_diff = fabs(volts - v_tmp);
-
-		unsigned int id = 0x050;
-		unsigned long long msg = 0x0000000000000000;
-
-		vset = v_tmp;
-
-		float vpct = vset / C40N_MAX;
-		printf("  fraction of max HV output (4kV) = %f\n", vpct);
-		float dac_vout = vpct * DAC_VMAX;
-		printf("  DAC output voltage = %f\n", dac_vout);
-
-		// convert into DAC input code
-		int k = 0;
-		k = (int)(pow(2,12) * dac_vout / DAC_VREF);
-		//printf("DEBUG:  k = %d,  k = %X (hex),  k << 3 = %X (hex)\n", k, k, (k<<3));
-
-		unsigned long long tmp;
-		stringstream ss;
-		ss << std::hex << (k<<3);
-		tmp = std::stoull(ss.str(),nullptr,16);
-
-		msg = msg | (tmp<<48);
-		printf("0x%016llx\n", msg);
-
-		//Ask for sensor data
-		if(createCanFrame(id,msg,&frame))
-		{
-			fprintf(stderr, "HV: Wrong format!\n\n");
-			return 2;
-		}
-		if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) 
-		{
-			fprintf(stderr, "HV: Write error!\n\n");
-			return 3;
-		}
+	if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) {
+		fprintf(stderr, "HV: Write error!\n\n");
+		return 3;
 	}
 
 	return retval;
@@ -487,7 +461,7 @@ int Canbus::GetHV_ONOFF(){
 	int HV_state=6;
 	
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "HV: Wrong format!\n\n");
 		return 2;
 	}
@@ -568,7 +542,7 @@ int Canbus::SetLV(bool state){
 	}
 
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "LV: Wrong format!\n\n");
 		return 2;
 	}
@@ -646,7 +620,7 @@ int Canbus::GetLV(){
 	int LV_state=6;
 	
 	//Ask for sensor data
-	if(createCanFrame(id,msg,&frame)==0){
+	if(createCanFrame(id,msg,&frame)!=0){
 		fprintf(stderr, "LV: Wrong format!\n\n");
 		return 2;
 	}
