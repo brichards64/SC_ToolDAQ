@@ -90,7 +90,7 @@ public:
 		return 16;
 	}
 
-	char* parseFrame(unsigned int id, unsigned long msg)
+	char* parseFrame(unsigned int id, unsigned long long msg)
 	{
 		char* t_id = (char *)malloc(64);
 		char* t_msg = (char *)malloc(64);
