@@ -48,7 +48,6 @@ bool Stream::Execute(){
 bool Stream::Finalise(){
 
   delete sock;
-  sock=0;
 
   return true;
 }

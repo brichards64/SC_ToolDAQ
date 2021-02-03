@@ -407,7 +407,7 @@ int Canbus::SetHV_voltage(float volts){
 	unsigned long long msg;
 	int k;
 	unsigned long long tmp;
-	stringstream ss;
+	
 
 	if(volts > HV_MAX)
 	{
@@ -423,8 +423,10 @@ int Canbus::SetHV_voltage(float volts){
     }	
     v_tmp = v_pre;
     v_diff = abs(volts-v_tmp);
+    
 	while(v_tmp != volts)
 	{
+		//std::cout << volts << "!=" << v_tmp << std::endl;
 		if(v_diff < 50) // check if close to final voltage
 		{
 			v_tmp += sign*v_diff;
@@ -437,27 +439,27 @@ int Canbus::SetHV_voltage(float volts){
 
 		id = 0x050;
 		msg = 0x0000000000000000;
-
+	
 		vset = v_tmp;
 
 		vpct = vset / C40N_MAX;
-		printf("  fraction of max HV output (4kV) = %f\n", vpct);
+		//printf("  fraction of max HV output (4kV) = %f\n", vpct);
 		dac_vout = vpct * DAC_VMAX;
-		printf("  DAC output voltage = %f\n", dac_vout);
+		//printf("  DAC output voltage = %f\n", dac_vout);
 
 		// convert into DAC input code
 		k = 0;
 		k = (int)(pow(2,12) * dac_vout / DAC_VREF);
-		printf("DEBUG:  k = %d,  k = %X (hex),  k << 3 = %X (hex)\n", k, k, (k<<3));
-
+		//printf("DEBUG:  k = %d,  k = %X (hex),  k << 3 = %X (hex)\n", k, k, (k<<3));
+		stringstream ss;
 		ss << std::hex << (k<<3);
+		tmp = 0x0000000000000000;
 		tmp = std::stoull(ss.str(),nullptr,16);
-
+		
 		msg = msg | (tmp<<48);
-		printf("0x%016llx\n", msg);
 
 		//Ask for sensor data
-		if(createCanFrame(id,msg,&frame))
+		if(createCanFrame(id,msg,&frame)!=0)
 		{
 			fprintf(stderr, "HV: Wrong format!\n\n");
 			return 2;
@@ -467,6 +469,7 @@ int Canbus::SetHV_voltage(float volts){
 			fprintf(stderr, "HV: Write error!\n\n");
 			return 3;
 		}
+		usleep(1000);
 	}
 
 	return retval;
@@ -703,6 +706,77 @@ int Canbus::GetLV(){
 	}
 
 	return LV_state;
+}
+
+int Canbus::SetRelay(int idx, bool state){
+	wiringPiSetup();
+	pinMode(RLY1, OUTPUT);
+	pinMode(RLY2, OUTPUT);
+	pinMode(RLY3, OUTPUT);
+	int ch;
+	int status = 0;
+
+	switch(idx){
+		case 1:
+			ch = RLY1;
+			break;
+		case 2:
+			ch = RLY2;
+			break;
+		case 3:
+			ch = RLY3;
+			break;
+		default :
+			printf(" Invalid relay channel! \n");
+			return status;
+	}
+	
+	digitalWrite(ch, state);
+	if((digitalRead(ch)) == state)
+	{
+		if(state==true){
+			status = 1;
+		}else{
+			status = 0;
+		}
+		printf("Relay %d\n", idx);
+	}
+
+	return status;
+}
+
+int Canbus::GetRelay(int idx){
+	wiringPiSetup();
+	pinMode(RLY1, OUTPUT);
+	pinMode(RLY2, OUTPUT);
+	pinMode(RLY3, OUTPUT);
+	int ch;
+	int status = 0;
+
+	switch(idx){
+		case 1:
+			ch = RLY1;
+			break;
+		case 2:
+			ch = RLY2;
+			break;
+		case 3:
+			ch = RLY3;
+			break;
+		default :
+			printf(" Invalid relay channel! \n");
+			return status;
+	}
+	bool retval = digitalRead(ch);
+	if(retval == true)
+	{
+		status = 1;
+		printf("Relay %d\n", idx);
+	}else if(retval == false){
+		status = 0;
+	}
+
+	return status;
 }
 
 

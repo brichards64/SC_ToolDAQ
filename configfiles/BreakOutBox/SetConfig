@@ -1,4 +1,7 @@
-verbose 9
+verbose 1
 LV_state_set 1
 HV_state_set 0
-HV_volts 200
+HV_volts 1000
+relayCh1 0
+relayCh2 0
+relayCh3 0

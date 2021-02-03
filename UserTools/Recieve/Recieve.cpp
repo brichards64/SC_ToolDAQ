@@ -29,6 +29,7 @@ bool Recieve::Initialise(std::string configfile, DataModel &data){
   if((items [0].revents & ZMQ_POLLIN)) 
   {
     m_data->LAPPDdata.Receive(sock);
+    m_data->LAPPDdata.RelayControl(sock);
   }
 
   return true;
@@ -37,21 +38,23 @@ bool Recieve::Initialise(std::string configfile, DataModel &data){
 
 bool Recieve::Execute(){
 
-  if(m_data->LAPPDdata.recieveFlag == 0) 
-  {
     zmq::poll(&items[0], 1, 100);
 
     if((items [0].revents & ZMQ_POLLIN)) 
     {
-    	m_data->LAPPDdata.Receive(sock);
+      if(m_data->LAPPDdata.recieveFlag == 0) 
+      {
+        m_data->LAPPDdata.Receive(sock);
+      }
+      m_data->LAPPDdata.RelayControl(sock);  
     }
-  }
-
+  
   return true;
 }
 
 
 bool Recieve::Finalise(){
+  delete sock;
 
   return true;
 }

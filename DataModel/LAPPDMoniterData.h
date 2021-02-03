@@ -16,6 +16,7 @@ class LAPPDMoniterData : public SerialisableObject{
   //Comms
   bool Send(zmq::socket_t* sock);
   bool Receive(zmq::socket_t* sock);
+  bool RelayControl(zmq::socket_t* sock);
   int recieveFlag = 0;
   
   //RHT
@@ -23,12 +24,12 @@ class LAPPDMoniterData : public SerialisableObject{
   float temp_mon;
   
   //HV
-  bool HV_mon;
+  int HV_mon;
   bool HV_state_set;
   float HV_volts;
 
   //LV
-  bool LV_mon;
+  int LV_mon;
   bool LV_state_set;
 
   //Emergency variables
@@ -36,10 +37,13 @@ class LAPPDMoniterData : public SerialisableObject{
   float LIMIT_humidity_low = 0;
   float LIMIT_temperature_high = 0;
   float LIMIT_humidity_high = 0;  
-  bool FLAG_temperature;
-  bool FLAG_humidity;
+  int FLAG_temperature=0;
+  int FLAG_humidity=0;
 
-
+  //relay
+  bool relayCh1;
+  bool relayCh2;
+  bool relayCh3;
 
   bool Print();
 

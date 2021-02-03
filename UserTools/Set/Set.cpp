@@ -16,21 +16,28 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 
   if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
-	if(m_data->LAPPDdata.recieveFlag==0)
-	{
-		bool temp_HVS;
-		m_variables.Get("HV_state_set",temp_HVS);
-		m_data->LAPPDdata.HV_state_set = temp_HVS;
+  if(m_data->LAPPDdata.recieveFlag==0)
+  {
+	  bool temp_HVS;
+	  m_variables.Get("HV_state_set",temp_HVS);
+	  m_data->LAPPDdata.HV_state_set = temp_HVS;
 
-		bool temp_LVS;
-		m_variables.Get("LV_state_set",temp_LVS);
-		m_data->LAPPDdata.LV_state_set = temp_LVS;
+	  bool temp_LVS;
+	  m_variables.Get("LV_state_set",temp_LVS);
+	  m_data->LAPPDdata.LV_state_set = temp_LVS;
 
-		float temp_HVV;
-		m_variables.Get("HV_volts",temp_HVV);
-		m_data->LAPPDdata.HV_volts = temp_HVV;
-		m_data->CB->get_HV_volts= temp_HVV;
-	}
+	  float temp_HVV;
+	  m_variables.Get("HV_volts",temp_HVV);
+	  m_data->LAPPDdata.HV_volts = temp_HVV;
+	  
+	  bool temp_r1, temp_r2,temp_r3;
+	  m_variables.Get("relayCh1",temp_r1);
+	  m_variables.Get("relayCh2",temp_r2);
+	  m_variables.Get("relayCh3",temp_r3);
+	  m_data->LAPPDdata.relayCh1 = temp_r1;
+	  m_data->LAPPDdata.relayCh2 = temp_r2;
+	  m_data->LAPPDdata.relayCh3 = temp_r3;
+  }
 
   int retval;
   retval = m_data->CB->SetLV(m_data->LAPPDdata.LV_state_set);
@@ -66,33 +73,73 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   {
 	std::cout << " There was an error with retval: " << retval << std::endl;
   }
-
+  
+  retval = m_data->CB->SetRelay(1,m_data->LAPPDdata.relayCh1);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 1 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 1 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  }
+  
+  retval = m_data->CB->SetRelay(2,m_data->LAPPDdata.relayCh2);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 2 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 2 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  } 
+   
+  retval = m_data->CB->SetRelay(3,m_data->LAPPDdata.relayCh3);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 3 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 3 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  }
+  
   return true;
 }
 
 
 bool Set::Execute(){
-
-	//check LV/HV state_set 
+  int retval;
+  //check LV/HV state_set 
   if(m_data->LAPPDdata.recieveFlag==0)
   {
+	  bool temp_HVS;
+	  m_variables.Get("HV_state_set",temp_HVS);
+	  m_data->LAPPDdata.HV_state_set = temp_HVS;
 
-		bool temp_HVS;
-		m_variables.Get("HV_state_set",temp_HVS);
-		m_data->LAPPDdata.HV_state_set = temp_HVS;
+	  bool temp_LVS;
+	  m_variables.Get("LV_state_set",temp_LVS);
+	  m_data->LAPPDdata.LV_state_set = temp_LVS;
 
-		bool temp_LVS;
-		m_variables.Get("LV_state_set",temp_LVS);
-		m_data->LAPPDdata.LV_state_set = temp_LVS;
-
-		float temp_HVV;
-		m_variables.Get("HV_volts",temp_HVV);
-		m_data->LAPPDdata.HV_volts = temp_HVV;
-		m_data->CB->get_HV_volts= temp_HVV;
+	  float temp_HVV;
+	  m_variables.Get("HV_volts",temp_HVV);
+	  m_data->LAPPDdata.HV_volts = temp_HVV;
+	  
+	  bool temp_r1, temp_r2,temp_r3;
+	  m_variables.Get("relayCh1",temp_r1);
+	  m_variables.Get("relayCh2",temp_r2);
+	  m_variables.Get("relayCh3",temp_r3);
+	  m_data->LAPPDdata.relayCh1 = temp_r1;
+	  m_data->LAPPDdata.relayCh2 = temp_r2;
+	  m_data->LAPPDdata.relayCh3 = temp_r3;
 	
-
-
-	  int retval;
+	  
 	  retval = m_data->CB->SetLV(m_data->LAPPDdata.LV_state_set);
 	  if(retval == 0)
 	  {
@@ -127,6 +174,42 @@ bool Set::Execute(){
 		std::cout << " There was an error with retval: " << retval << std::endl;
 	  }
   }	
+  
+  retval = m_data->CB->SetRelay(1,m_data->LAPPDdata.relayCh1);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 1 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 1 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  }
+  
+  retval = m_data->CB->SetRelay(2,m_data->LAPPDdata.relayCh2);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 2 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 2 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  } 
+   
+  retval = m_data->CB->SetRelay(3,m_data->LAPPDdata.relayCh3);
+  if(retval == 0)
+  {
+  	std::cout << " Relay 3 should be turned off " << std::endl;
+  }else if(retval ==1)
+  {
+  	std::cout << " Relay 3 should be turned on " << std::endl;
+  }else
+  {
+	std::cout << " There was an error with retval: " << retval << std::endl;
+  }
 
   return true;
 }
@@ -134,5 +217,6 @@ bool Set::Execute(){
 
 bool Set::Finalise(){
 
+  m_data->CB->get_HV_volts = 0;
   return true;
 }

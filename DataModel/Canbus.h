@@ -21,6 +21,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <linux/can/error.h>
+#include <wiringPi.h>
 
 #define CANID_DELIM '#'
 #define DELIM "#"
@@ -30,6 +31,9 @@
 #define DAC_VMAX 5.0
 #define DAC_VREF 2.048
 #define DV 50.0 // V
+#define RLY1 25
+#define RLY2 28
+#define RLY3 29
 
 using namespace std;
 
@@ -60,6 +64,10 @@ public:
 	int GetTriggerDac1();
 	int SetTriggerDac0();
 	int SetTriggerDac1();
+	
+	//Relay
+	int SetRelay(int idx, bool state);
+	int GetRelay(int idx);
 
 	//??
 	bool GetLeak();
@@ -106,13 +114,13 @@ public:
 		strcat(r_frame,DELIM);
 		strcat(r_frame,ss2.str().c_str());
 
-		std::cout << r_frame << std::endl;
+		//std::cout << r_frame << std::endl;
 
 		return r_frame;
 	}
 
 
-	int createCanFrame(unsigned int id, unsigned long msg, struct can_frame *cf)
+	int createCanFrame(unsigned int id, unsigned long long msg, struct can_frame *cf)
 	{
 		char *t_frame = (char *)malloc(128);
 		t_frame = parseFrame(id,msg);

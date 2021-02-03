@@ -26,10 +26,10 @@ bool Poll::Execute(){
   int LVstate = m_data->CB->GetLV();
   if(LVstate==0)
   {
-  	m_data->LAPPDdata.LV_mon = false;
+  	m_data->LAPPDdata.LV_mon = 0;
   }else if(LVstate==1)
   {
-  	m_data->LAPPDdata.LV_mon == true;
+  	m_data->LAPPDdata.LV_mon = 1;
   }else
   {
   	std::cout << "There has been an error with: " << LVstate << std::endl;
@@ -39,10 +39,10 @@ bool Poll::Execute(){
   int HVstate = m_data->CB->GetHV_ONOFF();
   if(HVstate==0)
   {
-  	m_data->LAPPDdata.HV_mon = false;
+  	m_data->LAPPDdata.HV_mon = 0;
   }else if(HVstate==1)
   {
-  	m_data->LAPPDdata.HV_mon == true;
+  	m_data->LAPPDdata.HV_mon = 1;
   }else
   {
   	std::cout << "There has been an error: " << HVstate << std::endl;
@@ -52,6 +52,9 @@ bool Poll::Execute(){
   vector<float> RHT = m_data->CB->GetTemp();
   m_data->LAPPDdata.temp_mon = RHT[0];
   m_data->LAPPDdata.hum_mon = RHT[1];
+  
+  //Relay
+  
 
   //DAC0
 
