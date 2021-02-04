@@ -1,6 +1,6 @@
 #!/bin/bash
  
-source ./GetToolDAQ.sh
+source ./Setup.sh
 
 ./main
 
