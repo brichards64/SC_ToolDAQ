@@ -62,8 +62,8 @@ public:
 	vector<float> GetTemp(); //done
 
 	//Trigger DAC
-	int GetTriggerDac0();
-	int GetTriggerDac1();
+	float GetTriggerDac0();
+	float GetTriggerDac1();
 	int SetTriggerDac0(float threshold);
 	int SetTriggerDac1(float threshold);
 	

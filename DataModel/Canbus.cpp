@@ -33,7 +33,7 @@ float Canbus::GetLight(){
 }
 
 
-int Canbus::GetTriggerDac0()
+float Canbus::GetTriggerDac0()
 {
 	unsigned int id = 0x0BC;
 	unsigned long long msg = 0x0000000000000000;
@@ -82,7 +82,7 @@ int Canbus::GetTriggerDac0()
 	}
 }
 
-int Canbus::GetTriggerDac1()
+float Canbus::GetTriggerDac1()
 {
 	unsigned int id = 0x0EF;
 	unsigned long long msg = 0x0000000000000000;
