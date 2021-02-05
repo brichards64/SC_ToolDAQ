@@ -96,8 +96,8 @@ bool LAPPDMoniterData::Print(){
   std::cout << "Relay 1 is " << relayCh1 << std::endl;
   std::cout << "Relay 2 is " << relayCh2 << std::endl;
   std::cout << "Relay 3 is " << relayCh3 << std::endl;
-  std::cout << "Threshold for DAC 0 is " << Trig1_mon << " V" << std::endl;
-  std::cout << "Threshold for DAC 0 is " << Trig2_mon << " V" << std::endl;
+  std::cout << "Threshold for DAC 0 is " << Trig0_mon << " V" << std::endl;
+  std::cout << "Threshold for DAC 1 is " << Trig1_mon << " V" << std::endl;
   
   return true;
 }

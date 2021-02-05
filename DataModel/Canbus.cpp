@@ -147,7 +147,7 @@ int Canbus::SetTriggerDac0(float threshold)
 
 	stringstream ss;
 	ss << std::hex << (k<<3);
-	tmp = 0x0000000000000000;
+	unsigned long long tmp = 0x0000000000000000;
 	tmp = std::stoull(ss.str(),nullptr,16);
 
 	msg = msg | (tmp<<48);
@@ -216,7 +216,7 @@ int Canbus::SetTriggerDac1(float threshold)
 
 	stringstream ss;
 	ss << std::hex << (k<<3);
-	tmp = 0x0000000000000000;
+	unsigned long long tmp = 0x0000000000000000;
 	tmp = std::stoull(ss.str(),nullptr,16);
 
 	msg = msg | (tmp<<48);
