@@ -53,12 +53,11 @@ bool Poll::Execute(){
   m_data->LAPPDdata.temp_mon = RHT[0];
   m_data->LAPPDdata.hum_mon = RHT[1];
   
-  //Relay
-  
-
   //DAC0
+  m_data->LAPPDdata.Trig0_mon = m_data->CB->GetTriggerDac0();
 
   //DAC1
+  m_data->LAPPDdata.Trig1_mon = m_data->CB->GetTriggerDac1();
 
   return true;
 }
