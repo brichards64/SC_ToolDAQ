@@ -37,19 +37,13 @@ class LAPPDMoniterData : public SerialisableObject{
   float LIMIT_humidity_low = 0;
   float LIMIT_temperature_high = 0;
   float LIMIT_humidity_high = 0;  
-  int FLAG_temperature = 0;
-  int FLAG_humidity = 0;
+  int FLAG_temperature=0;
+  int FLAG_humidity=0;
 
   //relay
   bool relayCh1;
   bool relayCh2;
   bool relayCh3;
-
-  //Triggerboard
-  float Trig1_threshold;
-  float Trig1_mon;
-  float Trig0_threshold;
-  float Trig0_mon;
 
   bool Print();
 
@@ -70,10 +64,6 @@ class LAPPDMoniterData : public SerialisableObject{
   ar & LIMIT_humidity_high;  
   ar & FLAG_temperature;
   ar & FLAG_humidity;
-  ar & Trig1_threshold;
-  ar & Trig1_mon;
-  ar & Trig0_threshold;
-  ar & Trig0_mon;
   
  }
  

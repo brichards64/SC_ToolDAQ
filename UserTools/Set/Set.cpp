@@ -29,14 +29,6 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 	  float temp_HVV;
 	  m_variables.Get("HV_volts",temp_HVV);
 	  m_data->LAPPDdata.HV_volts = temp_HVV;
-
-    float temp_Tr1;
-    m_variables.Get("Trig1_threshold",temp_Tr1);
-    m_data->LAPPDdata.Trig1_threshold = temp_Tr1;
-
-    float temp_Tr0;
-    m_variables.Get("Trig0_threshold",temp_Tr0);
-    m_data->LAPPDdata.Trig0_threshold = temp_Tr0;
 	  
 	  bool temp_r1, temp_r2,temp_r3;
 	  m_variables.Get("relayCh1",temp_r1);
@@ -57,7 +49,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   	std::cout << " LV should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
 
   retval = m_data->CB->SetHV_voltage(m_data->LAPPDdata.HV_volts);
@@ -67,7 +59,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   	m_data->CB->get_HV_volts= m_data->LAPPDdata.HV_volts;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
 
   retval = m_data->CB->SetHV_ONOFF(m_data->LAPPDdata.HV_state_set);
@@ -81,24 +73,6 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   {
 	std::cout << " There was an error with retval: " << retval << std::endl;
   }
-
-  retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold);
-  if(retval == 1)
-  {
-    std::cout << " Threshold on DAC 0 set on LVHV " << std::endl;
-  }else
-  {
-    std::cout << " There was an error with retval: " << retval << std::endl;
-  }
-
-  retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold);
-  if(retval == 1)
-  {
-    std::cout << " Threshold on DAC 1 set on LVHV " << std::endl;
-  }else
-  {
-    std::cout << " There was an error with retval: " << retval << std::endl;
-  }
   
   retval = m_data->CB->SetRelay(1,m_data->LAPPDdata.relayCh1);
   if(retval == 0)
@@ -109,7 +83,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   	std::cout << " Relay 1 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
   
   retval = m_data->CB->SetRelay(2,m_data->LAPPDdata.relayCh2);
@@ -121,7 +95,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   	std::cout << " Relay 2 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   } 
    
   retval = m_data->CB->SetRelay(3,m_data->LAPPDdata.relayCh3);
@@ -133,7 +107,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
   	std::cout << " Relay 3 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
   
   return true;
@@ -156,14 +130,6 @@ bool Set::Execute(){
 	  float temp_HVV;
 	  m_variables.Get("HV_volts",temp_HVV);
 	  m_data->LAPPDdata.HV_volts = temp_HVV;
-
-    float temp_Tr1;
-    m_variables.Get("Trig1_threshold",temp_Tr1);
-    m_data->LAPPDdata.Trig1_threshold = temp_Tr1;
-
-    float temp_Tr0;
-    m_variables.Get("Trig0_threshold",temp_Tr0);
-    m_data->LAPPDdata.Trig0_threshold = temp_Tr0;
 	  
 	  bool temp_r1, temp_r2,temp_r3;
 	  m_variables.Get("relayCh1",temp_r1);
@@ -183,7 +149,7 @@ bool Set::Execute(){
 	  	std::cout << " LV should be turned on " << std::endl;
 	  }else
 	  {
-		  std::cout << " There was an error with retval: " << retval << std::endl;
+		std::cout << " There was an error with retval: " << retval << std::endl;
 	  }
 
 	  retval = m_data->CB->SetHV_voltage(m_data->LAPPDdata.HV_volts);
@@ -193,26 +159,8 @@ bool Set::Execute(){
 	  	m_data->CB->get_HV_volts = m_data->LAPPDdata.HV_volts;
 	  }else
 	  {
-		  std::cout << " There was an error with retval: " << retval << std::endl;
+		std::cout << " There was an error with retval: " << retval << std::endl;
 	  }
-
-    retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold);
-    if(retval == 1)
-    {
-      std::cout << " Threshold on DAC 0 set on LVHV " << std::endl;
-    }else
-    {
-      std::cout << " There was an error with retval: " << retval << std::endl;
-    }
-
-    retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold);
-    if(retval == 1)
-    {
-      std::cout << " Threshold on DAC 1 set on LVHV " << std::endl;
-    }else
-    {
-      std::cout << " There was an error with retval: " << retval << std::endl;
-    }
 
 	  retval = m_data->CB->SetHV_ONOFF(m_data->LAPPDdata.HV_state_set);
 	  if(retval == 0)
@@ -223,7 +171,7 @@ bool Set::Execute(){
 	  	std::cout << " HV should be turned on " << std::endl;
 	  }else
 	  {
-		  std::cout << " There was an error with retval: " << retval << std::endl;
+		std::cout << " There was an error with retval: " << retval << std::endl;
 	  }
   }	
   
@@ -236,7 +184,7 @@ bool Set::Execute(){
   	std::cout << " Relay 1 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
   
   retval = m_data->CB->SetRelay(2,m_data->LAPPDdata.relayCh2);
@@ -248,7 +196,7 @@ bool Set::Execute(){
   	std::cout << " Relay 2 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   } 
    
   retval = m_data->CB->SetRelay(3,m_data->LAPPDdata.relayCh3);
@@ -260,7 +208,7 @@ bool Set::Execute(){
   	std::cout << " Relay 3 should be turned on " << std::endl;
   }else
   {
-	  std::cout << " There was an error with retval: " << retval << std::endl;
+	std::cout << " There was an error with retval: " << retval << std::endl;
   }
 
   return true;

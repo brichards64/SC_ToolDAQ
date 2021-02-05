@@ -13,8 +13,6 @@ bool LAPPDMoniterData::Send(zmq::socket_t* sock){
   zmq::message_t msg7(&relayCh1,sizeof relayCh1, NULL);
   zmq::message_t msg8(&relayCh2,sizeof relayCh2, NULL);
   zmq::message_t msg9(&relayCh3,sizeof relayCh3, NULL);
-  zmq::message_t msg10(&Trig1_mon,sizeof Trig1_mon, NULL);
-  zmq::message_t msg11(&Trig0_mon,sizeof Trig0_mon,NULL);
 
   sock->send(msg1,ZMQ_SNDMORE);
   sock->send(msg2,ZMQ_SNDMORE);
@@ -24,10 +22,8 @@ bool LAPPDMoniterData::Send(zmq::socket_t* sock){
   sock->send(msg6,ZMQ_SNDMORE);
   sock->send(msg7,ZMQ_SNDMORE);
   sock->send(msg8,ZMQ_SNDMORE);
-  sock->send(msg9,ZMQ_SNDMORE);
-  sock->send(msg10,ZMQ_SNDMORE);
-  sock->send(msg11);
-
+  sock->send(msg9);
+  
   return true;
 
 }
@@ -45,7 +41,6 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
   HV_state_set=*(reinterpret_cast<bool*>(msg.data()));
   sock->recv(&msg);   
   HV_volts=*(reinterpret_cast<float*>(msg.data())); 
-
   //LV
   sock->recv(&msg);  
   LV_state_set=*(reinterpret_cast<bool*>(msg.data()));
@@ -59,12 +54,6 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
   LIMIT_temperature_high=*(reinterpret_cast<float*>(msg.data())); 
   sock->recv(&msg);
   LIMIT_humidity_high=*(reinterpret_cast<float*>(msg.data())); 
-
-  //Triggerboard
-  sock->recv(&msg);   
-  Trig1_threshold=*(reinterpret_cast<float*>(msg.data()));
-  sock->recv(&msg);   
-  Trig0_threshold=*(reinterpret_cast<float*>(msg.data())); 
 
   return true;
 
@@ -96,8 +85,7 @@ bool LAPPDMoniterData::Print(){
   std::cout << "Relay 1 is " << relayCh1 << std::endl;
   std::cout << "Relay 2 is " << relayCh2 << std::endl;
   std::cout << "Relay 3 is " << relayCh3 << std::endl;
-  std::cout << "Threshold for DAC 0 is " << Trig0_mon << " V" << std::endl;
-  std::cout << "Threshold for DAC 1 is " << Trig1_mon << " V" << std::endl;
+  
   
   return true;
 }

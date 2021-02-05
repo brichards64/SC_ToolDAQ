@@ -33,7 +33,7 @@ float Canbus::GetLight(){
 }
 
 
-float Canbus::GetTriggerDac0()
+int Canbus::GetTriggerDac0()
 {
 	unsigned int id = 0x0BC;
 	unsigned long long msg = 0x0000000000000000;
@@ -82,7 +82,7 @@ float Canbus::GetTriggerDac0()
 	}
 }
 
-float Canbus::GetTriggerDac1()
+int Canbus::GetTriggerDac1()
 {
 	unsigned int id = 0x0EF;
 	unsigned long long msg = 0x0000000000000000;
@@ -131,27 +131,13 @@ float Canbus::GetTriggerDac1()
 	}
 }
 
-int Canbus::SetTriggerDac0(float threshold)
+int Canbus::SetTriggerDac0()
 {
 	unsigned int id = 0x0AB;
 	unsigned long long msg = 0x0000000000000000;
 	int retval;
 
-	if(threshold>TRIG_MAX)
-	{
-		threshold = TRIG_MAX;
-	}
-
-  	int k = 0;
-  	k = (int)(threshold * 4096. / VREF);
-
-	stringstream ss;
-	ss << std::hex << (k<<3);
-	unsigned long long tmp = 0x0000000000000000;
-	tmp = std::stoull(ss.str(),nullptr,16);
-
-	msg = msg | (tmp<<48);
-
+	msg = msg;
 
 	//Ask for sensor data
 	if(createCanFrame(id,msg,&frame)!=0){
@@ -200,26 +186,13 @@ int Canbus::SetTriggerDac0(float threshold)
 	return retval;
 }
 
-int Canbus::SetTriggerDac1(float threshold)
+int Canbus::SetTriggerDac1()
 {
 	unsigned int id = 0x0DE;
 	unsigned long long msg = 0x0000000000000000;
 	int retval;
 
-	if(threshold>TRIG_MAX)
-	{
-		threshold = TRIG_MAX;
-	}
-
-  	int k = 0;
-  	k = (int)(threshold * 4096. / VREF);
-
-	stringstream ss;
-	ss << std::hex << (k<<3);
-	unsigned long long tmp = 0x0000000000000000;
-	tmp = std::stoull(ss.str(),nullptr,16);
-
-	msg = msg | (tmp<<48);
+	msg = msg;
 
 	//Ask for sensor data
 	if(createCanFrame(id,msg,&frame)!=0){

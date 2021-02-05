@@ -34,8 +34,6 @@
 #define RLY1 25
 #define RLY2 28
 #define RLY3 29
-#define TRIG_MAX 3.3 // V
-#define VREF 2.981 //3.3 // V
 
 using namespace std;
 
@@ -62,10 +60,10 @@ public:
 	vector<float> GetTemp(); //done
 
 	//Trigger DAC
-	float GetTriggerDac0();
-	float GetTriggerDac1();
-	int SetTriggerDac0(float threshold);
-	int SetTriggerDac1(float threshold);
+	int GetTriggerDac0();
+	int GetTriggerDac1();
+	int SetTriggerDac0();
+	int SetTriggerDac1();
 	
 	//Relay
 	int SetRelay(int idx, bool state);

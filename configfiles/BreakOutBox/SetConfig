@@ -5,5 +5,3 @@ HV_volts 1000
 relayCh1 0
 relayCh2 0
 relayCh3 0
-Trig1_threshold 1
-Trig0_threshold 1
