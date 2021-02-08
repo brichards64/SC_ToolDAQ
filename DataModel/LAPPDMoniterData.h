@@ -46,6 +46,7 @@ class LAPPDMoniterData : public SerialisableObject{
   bool relayCh3;
 
   //Triggerboard
+  float TrigVref;
   float Trig1_threshold;
   float Trig1_mon;
   float Trig0_threshold;
@@ -74,6 +75,7 @@ class LAPPDMoniterData : public SerialisableObject{
   ar & Trig1_mon;
   ar & Trig0_threshold;
   ar & Trig0_mon;
+  ar & TrigVref;
   
  }
  

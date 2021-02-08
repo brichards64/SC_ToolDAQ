@@ -30,13 +30,17 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 	  m_variables.Get("HV_volts",temp_HVV);
 	  m_data->LAPPDdata.HV_volts = temp_HVV;
 
-    float temp_Tr1;
-    m_variables.Get("Trig1_threshold",temp_Tr1);
-    m_data->LAPPDdata.Trig1_threshold = temp_Tr1;
+	  float temp_VREF;
+	  m_variables.Get("TrigVref",temp_VREF);
+	  m_data->LAPPDdata.TrigVref = temp_VREF;
 
-    float temp_Tr0;
-    m_variables.Get("Trig0_threshold",temp_Tr0);
-    m_data->LAPPDdata.Trig0_threshold = temp_Tr0;
+	  float temp_Tr1;
+	  m_variables.Get("Trig1_threshold",temp_Tr1);
+	  m_data->LAPPDdata.Trig1_threshold = temp_Tr1;
+
+	  float temp_Tr0;
+	  m_variables.Get("Trig0_threshold",temp_Tr0);
+	  m_data->LAPPDdata.Trig0_threshold = temp_Tr0;
 	  
 	  bool temp_r1, temp_r2,temp_r3;
 	  m_variables.Get("relayCh1",temp_r1);
@@ -82,7 +86,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
 	std::cout << " There was an error with retval: " << retval << std::endl;
   }
 
-  retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold);
+  retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold, m_data->LAPPDdata.TrigVref);
   if(retval == 1)
   {
     std::cout << " Threshold on DAC 0 set on LVHV " << std::endl;
@@ -91,7 +95,7 @@ bool Set::Initialise(std::string configfile, DataModel &data){
     std::cout << " There was an error with retval: " << retval << std::endl;
   }
 
-  retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold);
+  retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold, m_data->LAPPDdata.TrigVref);
   if(retval == 1)
   {
     std::cout << " Threshold on DAC 1 set on LVHV " << std::endl;
@@ -165,6 +169,10 @@ bool Set::Execute(){
     m_variables.Get("Trig0_threshold",temp_Tr0);
     m_data->LAPPDdata.Trig0_threshold = temp_Tr0;
 	  
+	  float temp_VREF;
+	  m_variables.Get("TrigVref",temp_VREF);
+	  m_data->LAPPDdata.TrigVref = temp_VREF;
+	  
 	  bool temp_r1, temp_r2,temp_r3;
 	  m_variables.Get("relayCh1",temp_r1);
 	  m_variables.Get("relayCh2",temp_r2);
@@ -196,7 +204,7 @@ bool Set::Execute(){
 		  std::cout << " There was an error with retval: " << retval << std::endl;
 	  }
 
-    retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold);
+    retval = m_data->CB->SetTriggerDac0(m_data->LAPPDdata.Trig0_threshold, m_data->LAPPDdata.TrigVref);
     if(retval == 1)
     {
       std::cout << " Threshold on DAC 0 set on LVHV " << std::endl;
@@ -205,7 +213,7 @@ bool Set::Execute(){
       std::cout << " There was an error with retval: " << retval << std::endl;
     }
 
-    retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold);
+    retval = m_data->CB->SetTriggerDac1(m_data->LAPPDdata.Trig1_threshold, m_data->LAPPDdata.TrigVref);
     if(retval == 1)
     {
       std::cout << " Threshold on DAC 1 set on LVHV " << std::endl;

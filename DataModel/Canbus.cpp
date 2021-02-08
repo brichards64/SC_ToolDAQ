@@ -33,7 +33,7 @@ float Canbus::GetLight(){
 }
 
 
-float Canbus::GetTriggerDac0()
+float Canbus::GetTriggerDac0(float VREF)
 {
 	unsigned int id = 0x0BC;
 	unsigned long long msg = 0x0000000000000000;
@@ -74,7 +74,13 @@ float Canbus::GetTriggerDac0()
 
 	if(retID == 0x0CB)
 	{
-		//
+		if((retMSG>>56)==0xC0)
+		{
+			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
+			float result = value*VREF/4096;
+
+			return result;
+		}
 	}else
 	{
 		fprintf(stderr, "No response from LVHV after DAC0 check\n");
@@ -82,7 +88,7 @@ float Canbus::GetTriggerDac0()
 	}
 }
 
-float Canbus::GetTriggerDac1()
+float Canbus::GetTriggerDac1(float VREF)
 {
 	unsigned int id = 0x0EF;
 	unsigned long long msg = 0x0000000000000000;
@@ -123,7 +129,13 @@ float Canbus::GetTriggerDac1()
 
 	if(retID == 0x0FE)
 	{
-		//
+		if((retMSG>>56)==0xC0)
+		{
+			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
+			float result = value*VREF/4096;
+
+			return result;
+		}
 	}else
 	{
 		fprintf(stderr, "No response from LVHV after DAC1 check\n");
@@ -131,7 +143,7 @@ float Canbus::GetTriggerDac1()
 	}
 }
 
-int Canbus::SetTriggerDac0(float threshold)
+int Canbus::SetTriggerDac0(float threshold, float VREF)
 {
 	unsigned int id = 0x0AB;
 	unsigned long long msg = 0x0000000000000000;
@@ -151,7 +163,6 @@ int Canbus::SetTriggerDac0(float threshold)
 	tmp = std::stoull(ss.str(),nullptr,16);
 
 	msg = msg | (tmp<<48);
-
 
 	//Ask for sensor data
 	if(createCanFrame(id,msg,&frame)!=0){
@@ -190,7 +201,19 @@ int Canbus::SetTriggerDac0(float threshold)
 	//Analize response
 	if(retID == 0x0BA)
 	{
-		//
+		if((retMSG>>56)==0xC0)
+		{
+			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
+			float result = value*VREF/4096;
+			if(result == threshold)
+			{
+				return 0;
+			}else
+			{
+				std::cout << "Result was " << result << std::endl;
+				return 6;
+			}
+		}
 	}else
 	{
 		fprintf(stderr, "No response from LVHV after DAC0 check\n");
@@ -200,7 +223,7 @@ int Canbus::SetTriggerDac0(float threshold)
 	return retval;
 }
 
-int Canbus::SetTriggerDac1(float threshold)
+int Canbus::SetTriggerDac1(float threshold, float VREF)
 {
 	unsigned int id = 0x0DE;
 	unsigned long long msg = 0x0000000000000000;
@@ -258,7 +281,19 @@ int Canbus::SetTriggerDac1(float threshold)
 	//Analize response
 	if(retID == 0x0ED)
 	{
-		//
+		if((retMSG>>56)==0xC0)
+		{
+			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
+			float result = value*VREF/4096;
+			if(result == threshold)
+			{
+				return 0;
+			}else
+			{
+				std::cout << "Result was " << result << std::endl;
+				return 6;
+			}
+		}
 	}else
 	{
 		fprintf(stderr, "No response from LVHV after DAC1 check\n");
@@ -315,7 +350,7 @@ vector<float> Canbus::GetTemp()
 	if(retID == 0x321)
 	{
 		t_temp = retMSG & 0x0000FFFC00000000;
-		temp_hex = (t_temp << 16) >> 50;
+		temp_hex = t_temp >> 32;
 		t_hum = retMSG & 0x3FFF000000000000;
 		hum_hex = t_hum >> 48;
 
@@ -348,11 +383,11 @@ int Canbus::SetHV_ONOFF(bool state){
 	
 	if(state==true){
 		id = 0x040;
-		msg = 0x0000000000000000;
+		msg = 0xBEEFDEAD00000000;
 		retval = 1;
 	}else{
 		id = 0x030;
-		msg = 0x0000000000000000;
+		msg = 0x00000000BEEFDEAD;
 		retval = 0;
 	}
 
@@ -516,7 +551,7 @@ int Canbus::SetHV_voltage(float volts){
 //6: Why?
 int Canbus::GetHV_ONOFF(){ 
 	unsigned int id = 0x042;
-	unsigned long long msg = 0x0000000000000000;
+	unsigned long long msg = 0x0000BEEFDEAD0000;
 	int HV_state=6;
 	
 	//Ask for sensor data
@@ -592,11 +627,11 @@ int Canbus::SetLV(bool state){
 	
 	if(state==true){
 		id = 0x020;
-		msg = 0x0000000000000000;
+		msg = 0xDEADBEEF00000000;
 		retval = 1;
 	}else{
 		id = 0x010;
-		msg = 0x0000000000000000;
+		msg = 0x00000000DEADBEEF;
 		retval = 0;
 	}
 
@@ -675,7 +710,7 @@ int Canbus::SetLV(bool state){
 //6: Why?
 int Canbus::GetLV(){ 
 	unsigned int id = 0x022;
-	unsigned long long msg = 0x0000000000000000;
+	unsigned long long msg = 0x0000DEADBEEF0000;
 	int LV_state=6;
 	
 	//Ask for sensor data

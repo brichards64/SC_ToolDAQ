@@ -65,6 +65,8 @@ bool LAPPDMoniterData::Receive(zmq::socket_t* sock){
   Trig1_threshold=*(reinterpret_cast<float*>(msg.data()));
   sock->recv(&msg);   
   Trig0_threshold=*(reinterpret_cast<float*>(msg.data())); 
+  sock->recv(&msg);   
+  TrigVref=*(reinterpret_cast<float*>(msg.data()));
 
   return true;
 
