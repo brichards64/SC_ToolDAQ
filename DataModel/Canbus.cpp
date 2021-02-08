@@ -149,9 +149,9 @@ int Canbus::SetTriggerDac0(float threshold, float VREF)
 	unsigned long long msg = 0x0000000000000000;
 	int retval;
 
-	if(threshold>TRIG_MAX)
+	if(threshold>VREF)
 	{
-		threshold = TRIG_MAX;
+		threshold = VREF;
 	}
 
   	int k = 0;
@@ -229,9 +229,9 @@ int Canbus::SetTriggerDac1(float threshold, float VREF)
 	unsigned long long msg = 0x0000000000000000;
 	int retval;
 
-	if(threshold>TRIG_MAX)
+	if(threshold>VREF)
 	{
-		threshold = TRIG_MAX;
+		threshold = VREF;
 	}
 
   	int k = 0;
