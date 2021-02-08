@@ -77,7 +77,7 @@ float Canbus::GetTriggerDac0(float VREF)
 		if((retMSG>>56)==0xC0)
 		{
 			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
-			float result = value*VREF/4096;
+			float result = value*VREF/4095;
 
 			return result;
 		}
@@ -132,7 +132,7 @@ float Canbus::GetTriggerDac1(float VREF)
 		if((retMSG>>56)==0xC0)
 		{
 			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
-			float result = value*VREF/4096;
+			float result = value*VREF/4095;
 
 			return result;
 		}
@@ -155,7 +155,7 @@ int Canbus::SetTriggerDac0(float threshold, float VREF)
 	}
 
   	int k = 0;
-  	k = (int)(threshold * 4096. / VREF);
+  	k = (int)(threshold * 4095. / VREF);
 
 	stringstream ss;
 	ss << std::hex << (k);
@@ -204,7 +204,7 @@ int Canbus::SetTriggerDac0(float threshold, float VREF)
 		if((retMSG>>56)==0xC0)
 		{
 			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
-			float result = value*VREF/4096;
+			float result = value*VREF/4095;
 			if(result == threshold)
 			{
 				return 0;
@@ -235,7 +235,7 @@ int Canbus::SetTriggerDac1(float threshold, float VREF)
 	}
 
   	int k = 0;
-  	k = (int)(threshold * 4096. / VREF);
+  	k = (int)(threshold * 4095. / VREF);
 
 	stringstream ss;
 	ss << std::hex << (k);
@@ -284,7 +284,7 @@ int Canbus::SetTriggerDac1(float threshold, float VREF)
 		if((retMSG>>56)==0xC0)
 		{
 			unsigned int value = (retMSG & 0x00FFF00000000000) >> 44;
-			float result = value*VREF/4096;
+			float result = value*VREF/4095;
 			if(result == threshold)
 			{
 				return 0;
